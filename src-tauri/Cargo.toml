@@ -1,0 +1,15 @@
+[package]
+name = "real-life-context-switching"
+version = "0.1.0"
+edition = "2021"
+description = "A minimal Tauri app to track tasks in memory and export JSON on exit."
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+chrono = { version = "0.4", features = ["clock"] }
+
+tauri = { version = "2", features = ["tray-icon"] }

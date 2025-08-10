@@ -1,0 +1,33 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
+
+# Node (not used now, but safe if added later)
+node_modules/
+dist/
+build/
+
+# Rust/Tauri
+/target/
+/src-tauri/target/
+/src-tauri/gen/
+/src-tauri/**/.fingerprint/
+/src-tauri/**/incremental/
+/src-tauri/**/*.pdb
+/src-tauri/**/*.dSYM/
+
+# Bundles/Artifacts
+/src-tauri/target/release/bundle/
+/src-tauri/target/debug/bundle/
+
+# Env
+.env
+.env.*
