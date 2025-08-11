@@ -87,6 +87,11 @@ jobs:
           find frontend/dist -type f | head -50
           test -f frontend/dist/index.html || { echo 'index.html missing; build failed'; exit 1; }
 
+      - name: Install Tauri CLI (dry run)
+        if: ${{ inputs.dry_run }}
+        run: |
+          cargo tauri --version || cargo install tauri-cli --locked
+
       - name: Install Linux dependencies
         if: matrix.platform == 'ubuntu-latest'
         run: |
