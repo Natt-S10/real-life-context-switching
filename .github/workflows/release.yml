@@ -58,7 +58,16 @@ jobs:
               TAG="v0.0.0-dev"
               echo "No tag found; using $TAG for dry run"
             else
-              echo "No tag found" && exit 1
+              BRANCH="${GITHUB_REF##*/}"
+              BASE_TAG="v0.0.0"
+              LATEST_TAG=$(git tag --list "v*" --sort=-v:refname | head -n1)
+              if [[ -n "$LATEST_TAG" ]]; then
+                BASE_TAG="$LATEST_TAG"
+              fi
+              IFS='.-' read -r _ MAJOR MINOR PATCH _ <<< "${BASE_TAG#v}"
+              PATCH=$((PATCH + 1))
+              TAG="v${MAJOR}.${MINOR}.${PATCH}-${BRANCH}"
+              echo "No tag found; using incremented $TAG for manual trigger"
             fi
           fi
           if [[ ! "$TAG" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)(-[0-9A-Za-z.-]+)?$ ]]; then
