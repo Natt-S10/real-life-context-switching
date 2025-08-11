@@ -91,12 +91,6 @@ jobs:
         run: npm run build
         working-directory: frontend
 
-      - name: Debug dist contents
-        run: |
-          ls -al frontend/dist || echo 'dist missing'
-          find frontend/dist -type f | head -50
-          test -f frontend/dist/index.html || { echo 'index.html missing; build failed'; exit 1; }
-
       - name: Install Tauri CLI (dry run)
         if: ${{ inputs.dry_run }}
         run: |
