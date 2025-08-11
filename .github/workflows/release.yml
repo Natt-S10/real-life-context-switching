@@ -7,6 +7,12 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Build only (no release upload)'
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -63,6 +69,16 @@ jobs:
         run: npm ci
         working-directory: frontend
 
+      - name: Build frontend
+        run: npm run build
+        working-directory: frontend
+
+      - name: Debug dist contents
+        run: |
+          ls -al frontend/dist || echo 'dist missing'
+          find frontend/dist -type f | head -50
+          test -f frontend/dist/index.html || { echo 'index.html missing; build failed'; exit 1; }
+
       - name: Install Linux dependencies
         if: matrix.platform == 'ubuntu-latest'
         run: |
@@ -70,7 +86,13 @@ jobs:
           sudo apt-get install -y libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev patchelf \
             webkit2gtk-4.1-dev || sudo apt-get install -y webkit2gtk-4.0-dev
 
+      - name: Tauri build (dry run, no release upload)
+        if: ${{ inputs.dry_run }}
+        run: cargo tauri build
+        working-directory: src-tauri
+
       - name: Build and publish with Tauri
+        if: ${{ !inputs.dry_run }}
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
